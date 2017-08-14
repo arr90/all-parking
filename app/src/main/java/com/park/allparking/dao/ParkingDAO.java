@@ -22,6 +22,17 @@ public class ParkingDAO {
 	private String[] columns = { ParkingSQLiteOpenHelper.COLUMN_ID, ParkingSQLiteOpenHelper.COLUMN_TITLE, ParkingSQLiteOpenHelper.COLUMN_DESCRIPTION};
 	private ParkingSQLiteOpenHelper sqliteOpenHelper;
 
+	private static ParkingDAO instance;
+
+	private ParkingDAO() {}
+
+	public static ParkingDAO getInstance(){
+		if(instance == null){
+			instance = new ParkingDAO();
+		}
+		return instance;
+	}
+
 	public ParkingDAO(Context context) {
 		sqliteOpenHelper = new ParkingSQLiteOpenHelper(context);
 	}

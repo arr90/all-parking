@@ -2,6 +2,7 @@ package com.park.allparking.vo;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -9,11 +10,15 @@ import java.util.Date;
  */
 public class Parking {
 
-    private long   id;
+    private long id;
+    private Date createDate;
     private String title;
     private String description;
     private LatLng latLng;
-    private Date createDate;
+    private Integer capacity;
+    private BigDecimal price;
+    private Date startTime;
+    private Date endTime;
 
     public long getId() {
         return id;

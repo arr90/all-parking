@@ -10,34 +10,26 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/searchText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:hint="Search Location Here" />
-
-        <!--<Button
-            android:id="@+id/search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:onClick="onMapSearch"
-            android:text="Search" />-->
+            android:layout_weight="1"
+            android:hint="Search Parking" />
 
         <ImageButton
             android:id="@+id/search_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:src="@drawable/places_ic_search"
             android:background="@null"
             android:tint="@color/ColorPrimaryDark"
             android:onClick="onMapSearch"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            />
+            android:layout_weight="0.20" />
 
     </LinearLayout>
-
+    <!--
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,18 +65,23 @@
             android:text="Hybrid" />
 
     </LinearLayout>
-
+-->
+<!--
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ToggleButton
+            android:id="@+id/mapStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="On"
+            android:textOff="Day"
+            android:textOn="Night"
+            android:onClick="changeStyleMap"
             />
-    </LinearLayout>
 
+    </LinearLayout>
+-->
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"

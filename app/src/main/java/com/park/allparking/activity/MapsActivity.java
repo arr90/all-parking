@@ -2,6 +2,7 @@ package com.park.allparking.activity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -35,10 +36,9 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.park.allparking.business.ParkingBusiness;
 import com.park.allparking.dao.ParkingDAO;
 import com.park.allparking.vo.Parking;
-
-import com.park.allparking.activity.R;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,7 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         initMap();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -80,15 +80,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .build();
 
         mGoogleApiClient.connect();
-
-        changeStyleMap();
-
-//        goToMylocation();
-
-//        android.location.Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-//        goToLocationZoom(new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude()), 15);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
 
         mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<android.location.Location>() {
             @Override
@@ -151,6 +142,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 TextView tvSnippet = (TextView) view.findViewById(R.id.tv_snippet);
 
                 LatLng latLng = marker.getPosition();
+                System.out.println(latLng.toString());
 
                 tvLocality.setText("Title: " + marker.getTitle() + " / ID: " + marker.getId());
                 tvLat.setText("Latitude:  " + latLng.latitude);
@@ -179,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onMapLongClick(LatLng latLng) {
                 Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
-                setMarker("", latLng);
+                setMarker("Marked now", latLng);
 //                Toast.makeText(MapsActivity.this, latLng.latitude + ", " + latLng.longitude, Toast.LENGTH_SHORT).show();
             }
         });
@@ -203,39 +195,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
+
+                Intent intent = new Intent(MapsActivity.this, ParkingDetailActivity.class);
+                intent.putExtra("parkingTitle",marker.getTitle());
+                startActivity(intent);
+            }
+        });
+
         mMap.setMyLocationEnabled(true);
     }
 
-    private void changeStyleMap() {
-        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.style_map_dark);
+    public void changeStyleMap(View v) {
+        //TODO changeStyleMap
+        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, true ? R.raw.style_map_dark : R.raw.style_map_light);
         mMap.setMapStyle(style);
+    }
+
+    public void getDetail(View v) {
+        Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
+
+        Intent intent = new Intent(this, ParkingDetailListActivity.class);
+        startActivity(intent);
+        Toast.makeText(this, Thread.currentThread().getStackTrace()[2].getMethodName(), Toast.LENGTH_SHORT).show();
     }
 
     private void goToMylocation() {
         Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
-        /*MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
-            @Override
-            public void gotLocation(android.location.Location location) {
-                Log.i(LOG_MAPS_ACTIVITY, "LOG ["+ Thread.currentThread().getStackTrace()[2].getMethodName()+"] {**********}");
-            }
-        };
-
-        MyLocation myLocation = new MyLocation();
-        myLocation.getLocation(this, locationResult);*/
     }
 
     public void onMapSearch(View view) throws IOException {
         Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
-        searchInMap();
-
-
-//        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+//        searchInMap();
+        searchParkings();
     }
 
     private void searchInMap() throws IOException {
-        EditText locationSearch = (EditText) findViewById(R.id.editText);
+        Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
+
+        EditText locationSearch = (EditText) findViewById(R.id.searchText);
         String location = locationSearch.getText().toString();
 
         Geocoder geocoder = new Geocoder(this);
@@ -250,6 +254,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         goToLocationZoom(latLng, 15);
 
         setMarker(locality, latLng);
+    }
+
+    private void searchParkings() throws IOException {
+        Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
+
+        EditText parkingSearch = (EditText) findViewById(R.id.searchText);
+        String titleText = parkingSearch.getText().toString();
+
+        List<Parking> parkings = ParkingBusiness.getInstance().findParkingByTitle(titleText);
+
+        Intent intent = new Intent(MapsActivity.this, ParkingDetailListActivity.class);
+        intent.putExtra("searchText", titleText);
+        startActivity(intent);
+
+        Toast.makeText(MapsActivity.this, Thread.currentThread().getStackTrace()[2].getMethodName(), Toast.LENGTH_SHORT).show();
     }
 
     private void goToLocation(LatLng latLng) {
@@ -286,28 +305,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap loadLocations() {
         Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
-        ParkingDAO locationDao = null;
+        ParkingDAO parkingDAO = null;
 
         try {
-            locationDao = new ParkingDAO(this);
-            locationDao.open();
-            List<Parking> locations = locationDao.getAllTest();
+            parkingDAO = new ParkingDAO(this);
+            parkingDAO.open();
+            List<Parking> parkings = parkingDAO.getAllTest();
 
-            for (Parking location : locations) {
+            for (Parking parking : parkings) {
                 mMap.addMarker(
                         new MarkerOptions()
-                                .position(location.getLatLng())
-                                .title(location.getTitle())
+                                .position(parking.getLatLng())
+                                .title(parking.getTitle())
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                .snippet(String.valueOf(location.getId()))
+                                .snippet(String.valueOf(parking.getId()))
                 );
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (locationDao != null)
-                locationDao.close();
+            if (parkingDAO != null)
+                parkingDAO.close();
         }
         return mMap;
     }
