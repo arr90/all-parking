@@ -56,3 +56,4 @@ freeline_project_description.json
 
 # My files removed
 .idea
+app/src/release
