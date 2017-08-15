@@ -202,6 +202,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
                 Intent intent = new Intent(MapsActivity.this, ParkingDetailActivity.class);
+                intent.putExtra("parkingID",marker.getSnippet());
                 intent.putExtra("parkingTitle",marker.getTitle());
                 startActivity(intent);
             }
@@ -262,13 +263,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         EditText parkingSearch = (EditText) findViewById(R.id.searchText);
         String titleText = parkingSearch.getText().toString();
 
-        List<Parking> parkings = ParkingBusiness.getInstance().findParkingByTitle(titleText);
-
         Intent intent = new Intent(MapsActivity.this, ParkingDetailListActivity.class);
         intent.putExtra("searchText", titleText);
         startActivity(intent);
-
-        Toast.makeText(MapsActivity.this, Thread.currentThread().getStackTrace()[2].getMethodName(), Toast.LENGTH_SHORT).show();
     }
 
     private void goToLocation(LatLng latLng) {
@@ -305,12 +302,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap loadLocations() {
         Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
-        ParkingDAO parkingDAO = null;
-
         try {
-            parkingDAO = new ParkingDAO(this);
-            parkingDAO.open();
-            List<Parking> parkings = parkingDAO.getAllTest();
+            List<Parking> parkings = ParkingBusiness.getInstance(this).getAllParkings();
 
             for (Parking parking : parkings) {
                 mMap.addMarker(
@@ -324,9 +317,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (parkingDAO != null)
-                parkingDAO.close();
         }
         return mMap;
     }

@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
-import com.park.allparking.activity.dummy.DummyContent;
 import com.park.allparking.business.ParkingBusiness;
 import com.park.allparking.vo.Parking;
 
@@ -99,18 +98,14 @@ public class ParkingDetailListActivity extends AppCompatActivity {
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
 //TODO        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(ParkingBusiness.getInstance().getAllTest()));
+        String arg = getIntent().getExtras().getString("searchText");
+        arg = this.getIntent().getStringExtra("searchText");
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(ParkingBusiness.getInstance(this).findParkingByTitle(arg)));
     }
 
-    public class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        //        private final List<DummyContent.DummyItem> mValues;
         private final List<Parking> mValues;
-
-/*        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
-            mValues = items;
-        }*/
 
         public SimpleItemRecyclerViewAdapter(List<Parking> items) {
             mValues = items;
@@ -118,8 +113,7 @@ public class ParkingDetailListActivity extends AppCompatActivity {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.parking_list_content, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.parking_list_content, parent, false);
             return new ViewHolder(view);
         }
 
@@ -137,9 +131,7 @@ public class ParkingDetailListActivity extends AppCompatActivity {
                         arguments.putString(ParkingDetailFragment.ARG_ITEM_ID, String.valueOf(holder.mItem.getId()));
                         ParkingDetailFragment fragment = new ParkingDetailFragment();
                         fragment.setArguments(arguments);
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.parking_detail_container, fragment)
-                                .commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.parking_detail_container, fragment).commit();
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, ParkingDetailActivity.class);
@@ -160,7 +152,6 @@ public class ParkingDetailListActivity extends AppCompatActivity {
             public final View mView;
             public final TextView mIdView;
             public final TextView mContentView;
-//            public DummyContent.DummyItem mItem;
             public Parking mItem;
 
             public ViewHolder(View view) {

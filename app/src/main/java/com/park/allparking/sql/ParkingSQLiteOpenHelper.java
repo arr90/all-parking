@@ -9,11 +9,15 @@ public class ParkingSQLiteOpenHelper extends SQLiteOpenHelper {
 	public static final String TABLE_LOCATION = "parking";
 
 	public static final String COLUMN_ID 		  = "_id";
+	public static final String COLUMN_CREATE_DATE = "create_date";
 	public static final String COLUMN_TITLE 	  = "title";
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_LATITUDE 	  = "latitude";
 	public static final String COLUMN_LONGITUDE   = "longitude";
-	public static final String COLUMN_CREATE_DATE = "create_date";
+	public static final String COLUMN_CAPACITY    = "capacity";
+	public static final String COLUMN_PRICE   	  = "price";
+	public static final String COLUMN_START_TIME  = "startTime";
+	public static final String COLUMN_END_TIME    = "endTime";
 
 	private static final String DATABASE_NAME	  = "all_parking.db";
 	private static final int 	DATABASE_VERSION  = 1;
@@ -21,11 +25,15 @@ public class ParkingSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_CREATE = "create table " + TABLE_LOCATION
 			+ "("
 			+ COLUMN_ID 	 	 + " integer primary key autoincrement , "
+			+ COLUMN_CREATE_DATE + " date not null , "
 			+ COLUMN_TITLE 		 + " text not null , "
 			+ COLUMN_DESCRIPTION + " text not null , "
 			+ COLUMN_LATITUDE 	 + " double not null , "
 			+ COLUMN_LONGITUDE	 + " double not null , "
-			+ COLUMN_CREATE_DATE + " date not null "
+			+ COLUMN_CAPACITY	 + " text not null , "
+			+ COLUMN_PRICE	 	 + " text not null , "
+			+ COLUMN_START_TIME	 + " date not null , "
+			+ COLUMN_END_TIME	 + " date not null  "
 			+ ");";
 
 	public ParkingSQLiteOpenHelper(Context context) {
