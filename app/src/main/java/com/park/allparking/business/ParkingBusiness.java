@@ -59,11 +59,11 @@ public class ParkingBusiness {
         return newParkings;
     }
 
-    public Parking getParkingByID(String text) {
+    public Parking getParkingByID(String parkingID) {
         List<Parking> parkings = getParkingDAOinstance(context).getAllTest();
         Parking parking = new Parking();
         for (Parking p : parkings ) {
-            if (p.getTitle().equalsIgnoreCase(text))
+            if (parkingID.equalsIgnoreCase(String.valueOf(p.getId())))
                 return p;
         }
         return parking;

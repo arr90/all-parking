@@ -202,8 +202,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
                 Intent intent = new Intent(MapsActivity.this, ParkingDetailActivity.class);
-                intent.putExtra("parkingID",marker.getSnippet());
-                intent.putExtra("parkingTitle",marker.getTitle());
+                intent.putExtra(ParkingDetailFragment.ARG_ITEM_ID, marker.getSnippet());
+                intent.putExtra(ParkingDetailFragment.ARG_ITEM_TITLE, marker.getTitle());
                 startActivity(intent);
             }
         });

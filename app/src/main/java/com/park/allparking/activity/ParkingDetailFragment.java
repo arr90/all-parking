@@ -40,9 +40,9 @@ public class ParkingDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_TITLE)){
-            String arg = getArguments().getString(ARG_ITEM_TITLE);
-            mItem = ParkingBusiness.getInstance(getActivity()).getParkingByID(arg);
+        if (this.getActivity().getIntent().hasExtra(ARG_ITEM_ID)){
+            String parkingID = this.getActivity().getIntent().getExtras().get(ARG_ITEM_ID).toString();
+            mItem = ParkingBusiness.getInstance(this.getActivity()).getParkingByID(parkingID);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

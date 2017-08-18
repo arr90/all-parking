@@ -136,6 +136,7 @@ public class ParkingDetailListActivity extends AppCompatActivity {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, ParkingDetailActivity.class);
                         intent.putExtra(ParkingDetailFragment.ARG_ITEM_ID, holder.mItem.getId());
+                        intent.putExtra(ParkingDetailFragment.ARG_ITEM_TITLE, holder.mItem.getTitle());
 
                         context.startActivity(intent);
                     }
