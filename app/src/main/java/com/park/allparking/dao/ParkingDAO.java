@@ -142,7 +142,7 @@ public class ParkingDAO {
 		List<Parking> locations = new ArrayList<Parking>();
 		Parking location;
 
-		for (long i=1;i<10;i++){
+		for (long i=1;i<=10;i++){
 			location = new Parking();
 			location.setId(i);
             location.setCreateDate(new Date());
@@ -161,7 +161,7 @@ public class ParkingDAO {
                 location.setLatLng(new LatLng(-22.8634671, -43.345479));
             }
             if(i==4) {
-                location.setTitle("PARK VICENTE CALDERON "+i);
+                location.setTitle("VICENTE CALDERON "+i);
                 location.setLatLng(new LatLng(-22.906337, -43.181129));
             }
             if(i==5) {

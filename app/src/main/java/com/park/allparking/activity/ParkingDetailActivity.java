@@ -12,6 +12,8 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.Stack;
+
 /**
  * An activity representing a single ParkingDetail detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
@@ -22,11 +24,14 @@ public class ParkingDetailActivity extends AppCompatActivity {
 
     private static final String LOG_PARKING_DETAIL_ACTIVITY = ParkingDetailActivity.class.getSimpleName();
 
+    public static Stack<Class<?>> parents = new Stack<Class<?>>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(LOG_PARKING_DETAIL_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
         super.onCreate(savedInstanceState);
+        parents.push(getClass());
         setContentView(R.layout.activity_parking_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
@@ -72,14 +77,18 @@ public class ParkingDetailActivity extends AppCompatActivity {
 
         int id = item.getItemId();
         if (id == android.R.id.home) {
+
+            Intent parentActivityIntent = new Intent(this, parents.pop());
+            parentActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            navigateUpTo(parentActivityIntent);
+            return true;
             // This ID represents the Home or Up button. In the case of this
             // activity, the Up button is shown. For
             // more details, see the Navigation pattern on Android Design:
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, ParkingDetailListActivity.class));
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }

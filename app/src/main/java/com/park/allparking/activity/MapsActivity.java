@@ -42,6 +42,7 @@ import com.park.allparking.vo.Parking;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Stack;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener {
 
@@ -54,11 +55,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
 
+    public static Stack<Class<?>> parents = new Stack<Class<?>>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(LOG_MAPS_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
         super.onCreate(savedInstanceState);
+        parents.push(getClass());
         setContentView(R.layout.activity_maps);
 
         initMap();
@@ -72,6 +76,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap = googleMap;
         mMap = loadLocations();
+
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, true ? R.raw.style_map_dark : R.raw.style_map_light));
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)

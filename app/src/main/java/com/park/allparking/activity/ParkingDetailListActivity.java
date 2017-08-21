@@ -22,6 +22,7 @@ import com.park.allparking.business.ParkingBusiness;
 import com.park.allparking.vo.Parking;
 
 import java.util.List;
+import java.util.Stack;
 
 import static android.support.v4.app.NavUtils.navigateUpFromSameTask;
 
@@ -42,11 +43,14 @@ public class ParkingDetailListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
 
+    public static Stack<Class<?>> parents = new Stack<Class<?>>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(LOG_PARKING_DETAIL_LIST_ACTIVITY, "LOG [" + Thread.currentThread().getStackTrace()[2].getMethodName() + "] {**********}");
 
         super.onCreate(savedInstanceState);
+        parents.push(getClass());
         setContentView(R.layout.activity_parking_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -121,7 +125,7 @@ public class ParkingDetailListActivity extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).getTitle());
-            holder.mContentView.setText(mValues.get(position).getTitle());
+            holder.mContentView.setText(mValues.get(position).getDescription());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
