@@ -251,6 +251,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Geocoder geocoder = new Geocoder(this);
         List<Address> addressList = geocoder.getFromLocationName(location, 1);
+        //TODO checking for null or empty
         Address address = addressList.get(0);
         String locality = address.getLocality();
 
